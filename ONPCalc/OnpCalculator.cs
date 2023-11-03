@@ -1,16 +1,23 @@
 using OnpCalc.MathOperators;
+using OnpCalc.NumberSystems;
 
 namespace OnpCalc;
 
 public class OnpCalculator : IRpnCalculator
 {
     private readonly Dictionary<string, IMathOperator> _operators = new();
+    private List<INumberSystem> _numberSystems = new ();
+    
     public OnpCalculator(IEnumerable<IMathOperator> operators)
     {
         foreach (var mathOperator in operators)
         {
             _operators.Add(mathOperator.Identity, mathOperator);
         }
+        _numberSystems.Add(new BinarySystem());
+        _numberSystems.Add(new DecimalSystem());
+        _numberSystems.Add(new OctalSystem());
+        _numberSystems.Add(new SasinSystem());
     }
     public int Calculate(string input)
     {
@@ -31,15 +38,18 @@ public class OnpCalculator : IRpnCalculator
                 var result = mathOperator.Execute(op1, op2);
                 stack.Push(result);
             }
-            else if(int.TryParse(token, out var number))
+            else
             {
-                stack.Push(number);
-            }else
-            {
-                throw new Exception($"Not a number and unknown Math Operator: {token}");
+                foreach (var numberSystem in _numberSystems)
+                {
+                    if (numberSystem.convert(token, out var number))
+                    {
+                        stack.Push(number.Value);
+                    }
+                }
             }
         }
-
+        
         if (stack.Count != 1)
         {
             var stackContent = stack.ToArray();
@@ -49,6 +59,5 @@ public class OnpCalculator : IRpnCalculator
         var resultFinal = stack.Pop();
         Console.WriteLine($"Result: {resultFinal}");
         return resultFinal;
-
     }
 }
