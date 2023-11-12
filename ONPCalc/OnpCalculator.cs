@@ -19,10 +19,10 @@ public class OnpCalculator : IRpnCalculator
         _numberSystems.Add(new OctalSystem());
         _numberSystems.Add(new SasinSystem());
     }
-    public int Calculate(string input)
+    public double Calculate(string input)
     {
         var tokens = input.Split();
-        var stack = new Stack<int>();
+        var stack = new Stack<double>();
         foreach (var token in tokens)
         {
             if (_operators.TryGetValue(token, out var mathOperator)) 

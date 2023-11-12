@@ -2,5 +2,5 @@ namespace OnpCalc;
 
 public interface IRpnCalculator
 {
-    public int Calculate(string input);
+    public double Calculate(string input);
 }

@@ -4,7 +4,7 @@ namespace OnpCalc.NumberSystems;
 
 public class DecimalSystem : INumberSystem
 {
-    public bool convert(string data, [NotNullWhen(true)]out int? number)
+    public bool convert(string data, [NotNullWhen(true)]out double? number)
     {
         try
         {
